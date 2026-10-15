@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#49336F">
   <title>Di Na Muli</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,23 +39,24 @@
       overflow: hidden;
       isolation: isolate;
       background: var(--purple);
-      transition: background-color 0.8s ease;
+      transition: background-color 0.9s ease;
     }
 
     #experience.purple {
-      background: var(--purple);
+      background-color: var(--purple);
     }
 
     #experience.cream {
-      background: var(--cream);
+      background-color: var(--cream);
     }
 
+    /* Latar krem sudah siap di balik animasi bintang. */
     #experience.opening {
-      background: var(--cream) !important;
+      background-color: var(--cream) !important;
       transition: none !important;
     }
 
-    /* HUJAN */
+    /* HUJAN DI KACA */
     #rain {
       position: absolute;
       inset: 0;
@@ -64,19 +66,44 @@
       pointer-events: none;
     }
 
+    /*
+      Lapisan kaca tipis: pantulan lembut di sisi layar,
+      tanpa menutupi lirik.
+    */
+    #glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          110deg,
+          rgba(255, 255, 255, 0.045),
+          transparent 22%,
+          transparent 75%,
+          rgba(255, 255, 255, 0.035)
+        );
+      opacity: 0.75;
+    }
+
     /* HEADER */
     #header {
       position: absolute;
       z-index: 3;
-      top: 9%;
+      top: 8%;
       left: 6%;
       right: 6%;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 20px;
+      gap: 18px;
       pointer-events: none;
-      transition: opacity 0.6s ease;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+
+    #header.dimmed {
+      opacity: 0.42;
     }
 
     .header-left {
@@ -94,13 +121,13 @@
     }
 
     .artist {
-      margin-top: 22px;
+      margin-top: 20px;
       font-family: "Montserrat", sans-serif;
-      font-size: clamp(10px, 1.8vw, 15px);
+      font-size: clamp(9px, 1.8vw, 14px);
       font-weight: 400;
-      letter-spacing: 0.38em;
+      letter-spacing: 0.35em;
       color: var(--cream);
-      opacity: 0.85;
+      opacity: 0.86;
     }
 
     .header-right {
@@ -108,21 +135,17 @@
       padding-top: 8px;
       text-align: right;
       font-family: "Montserrat", sans-serif;
-      font-size: clamp(9px, 1.8vw, 15px);
+      font-size: clamp(9px, 1.8vw, 14px);
       font-weight: 300;
       line-height: 2;
-      letter-spacing: 0.36em;
+      letter-spacing: 0.32em;
       color: var(--cream);
-      opacity: 0.85;
+      opacity: 0.86;
     }
 
-    /* Warna header mengikuti tema */
     #experience.cream .song-title,
     #experience.cream .artist,
-    #experience.cream .header-right {
-      color: var(--purple);
-    }
-
+    #experience.cream .header-right,
     #experience.opening .song-title,
     #experience.opening .artist,
     #experience.opening .header-right {
@@ -137,7 +160,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px;
+      padding: 30px;
       pointer-events: none;
     }
 
@@ -154,7 +177,7 @@
       text-wrap: balance;
       color: var(--purple);
       opacity: 0;
-      transition: opacity 0.6s ease;
+      transition: opacity 0.25s ease;
     }
 
     #experience.purple #lyric {
@@ -168,6 +191,7 @@
 
     #lyric.visible {
       opacity: 1;
+      transition: opacity 0.55s ease;
     }
 
     /* TOMBOL MULAI LAGI */
@@ -192,11 +216,11 @@
       visibility: hidden;
       pointer-events: none;
       transition:
-        opacity 0.6s ease,
-        transform 0.6s ease,
+        opacity 0.65s ease,
+        transform 0.65s ease,
         background-color 0.25s ease,
         color 0.25s ease,
-        visibility 0.6s;
+        visibility 0.65s;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -222,7 +246,7 @@
       color: var(--purple);
     }
 
-    /* LAYAR PEMBUKA */
+    /* BINTANG PEMBUKA */
     #intro {
       position: absolute;
       inset: 0;
@@ -326,14 +350,14 @@
       .artist {
         margin-top: 14px;
         font-size: 9px;
-        letter-spacing: 0.27em;
+        letter-spacing: 0.24em;
       }
 
       .header-right {
         max-width: 40%;
         padding-top: 4px;
         font-size: 9px;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.18em;
       }
 
       #lyricArea {
@@ -348,6 +372,15 @@
         bottom: 6%;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      #header,
+      #intro,
+      #lyric,
+      #replayButton {
+        transition-duration: 0.2s;
+      }
+    }
   </style>
 </head>
 
@@ -355,6 +388,7 @@
   <main id="experience" class="purple">
 
     <canvas id="rain"></canvas>
+    <div id="glass"></div>
 
     <header id="header">
       <div class="header-left">
@@ -395,6 +429,7 @@
     const intro = document.getElementById("intro");
     const starButton = document.getElementById("starButton");
     const lyricElement = document.getElementById("lyric");
+    const header = document.getElementById("header");
     const replayButton = document.getElementById("replayButton");
     const song = document.getElementById("song");
 
@@ -402,10 +437,12 @@
     let currentLyric = -1;
     let animationFrame = null;
     let openingTimer = null;
+    let lyricSwitchTimer = null;
+    let endingTimer = null;
 
     /*
       Waktu lirik dihitung dari awal file song.mp3.
-      Angka ini memakai perkiraan timing versi audio potongan.
+      Timing mengikuti perkiraan versi audio potongan sebelumnya.
     */
     const lyrics = [
       {
@@ -465,10 +502,272 @@
       }
     }
 
+    function clearAllTimers() {
+      clearTimeout(openingTimer);
+      clearTimeout(lyricSwitchTimer);
+      clearTimeout(endingTimer);
+    }
+
+    function setTheme(theme) {
+      experience.classList.remove("purple", "cream");
+      experience.classList.add(theme);
+    }
+
+    /*
+      Perpindahan lirik:
+      fade out 0.25s -> jeda 0.08s -> fade in 0.55s.
+      Tema berubah saat teks lama mulai menghilang.
+    */
     function showLyric(index) {
       if (index === currentLyric) return;
 
       currentLyric = index;
+
+      clearTimeout(lyricSwitchTimer);
+      lyricElement.classList.remove("visible");
+
+      if (index === -1) {
+        header.classList.remove("dimmed");
+
+        lyricSwitchTimer = setTimeout(() => {
+          if (currentLyric === -1) {
+            lyricElement.textContent = "";
+          }
+        }, 330);
+
+        return;
+      }
+
+      const item = lyrics[index];
+
+      setTheme(item.theme);
+      header.classList.add("dimmed");
+
+      lyricSwitchTimer = setTimeout(() => {
+        if (currentLyric !== index) return;
+
+        lyricElement.textContent = item.text;
+
+        /*
+          Tunggu 0.08 detik setelah fade out sebelum fade in.
+          Browser mendapat kesempatan merender opacity 0.
+        */
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            if (currentLyric === index) {
+              lyricElement.classList.add("visible");
+            }
+          });
+        });
+      }, 330);
+    }
+
+    function syncLyrics() {
+      if (!started || song.paused || song.ended) return;
+
+      const time = song.currentTime;
+      let activeIndex = -1;
+
+      for (let i = 0; i < lyrics.length; i++) {
+        if (time >= lyrics[i].start && time < lyrics[i].end) {
+          activeIndex = i;
+          break;
+        }
+      }
+
+      showLyric(activeIndex);
+      animationFrame = requestAnimationFrame(syncLyrics);
+    }
+
+    async function startExperience() {
+      if (started) return;
+
+      started = true;
+
+      experience.classList.remove("purple", "cream");
+      experience.classList.add("opening");
+      intro.classList.add("hidden");
+
+      try {
+        await song.play();
+        animationFrame = requestAnimationFrame(syncLyrics);
+      } catch (error) {
+        console.error("Audio tidak dapat diputar:", error);
+      }
+
+      openingTimer = setTimeout(() => {
+        experience.classList.remove("opening", "purple");
+        experience.classList.add("cream");
+      }, 2000);
+    }
+
+    async function playFromBeginning() {
+      stopLyricLoop();
+      clearAllTimers();
+
+      started = true;
+      currentLyric = -1;
+
+      lyricElement.classList.remove("visible");
+      lyricElement.textContent = "";
+      header.classList.remove("dimmed");
+      replayButton.classList.remove("show");
+      intro.classList.add("hidden");
+
+      experience.classList.remove("opening", "purple");
+      experience.classList.add("cream");
+
+      song.currentTime = 0;
+
+      try {
+        await song.play();
+        animationFrame = requestAnimationFrame(syncLyrics);
+      } catch (error) {
+        console.error("Audio tidak dapat diputar:", error);
+      }
+    }
+
+    starButton.addEventListener("click", startExperience);
+    replayButton.addEventListener("click", playFromBeginning);
+
+    song.addEventListener("ended", () => {
+      stopLyricLoop();
+      clearTimeout(lyricSwitchTimer);
+
+      currentLyric = -1;
+      lyricElement.classList.remove("visible");
+      header.classList.remove("dimmed");
+
+      /*
+        Beri waktu 0.25 detik untuk fade out,
+        lalu jeda sedikit sebelum tombol muncul.
+      */
+      endingTimer = setTimeout(() => {
+        lyricElement.textContent = "";
+
+        experience.classList.remove("purple", "opening");
+        experience.classList.add("cream");
+
+        replayButton.classList.add("show");
+      }, 930);
+    });
+
+    /*
+      HUJAN DI KACA
+      Tetesan tebal, variasi ukuran, serta garis pantulan.
+      Warna otomatis menyesuaikan tema krem atau ungu.
+    */
+    const canvas = document.getElementById("rain");
+    const ctx = canvas.getContext("2d");
+
+    let width = 0;
+    let height = 0;
+    let drops = [];
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const count = Math.floor(width / 3.8);
+
+      drops = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        length: 12 + Math.random() * 21,
+        speed: 2.2 + Math.random() * 5.2,
+        thickness: 1 + Math.random() * 1.1,
+        opacity: 0.25 + Math.random() * 0.38,
+        drift: 0.15 + Math.random() * 0.45
+      }));
+    }
+
+    function drawRain() {
+      ctx.clearRect(0, 0, width, height);
+
+      const isCream =
+        experience.classList.contains("cream") ||
+        experience.classList.contains("opening");
+
+      const rainColor = isCream
+        ? "73, 51, 111"
+        : "232, 217, 197";
+
+      for (const drop of drops) {
+        const gradient = ctx.createLinearGradient(
+          drop.x,
+          drop.y,
+          drop.x - drop.drift,
+          drop.y + drop.length
+        );
+
+        gradient.addColorStop(0, `rgba(${rainColor}, 0)`);
+        gradient.addColorStop(
+          0.3,
+          `rgba(${rainColor}, ${drop.opacity * 0.75})`
+        );
+        gradient.addColorStop(
+          1,
+          `rgba(${rainColor}, ${Math.min(drop.opacity + 0.24, 0.78)})`
+        );
+
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x - drop.drift, drop.y + drop.length);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = drop.thickness;
+        ctx.lineCap = "round";
+        ctx.stroke();
+
+        /*
+          Kilau kecil pada beberapa tetesan, seperti cahaya
+          yang memantul di permukaan kaca.
+        */
+        if (drop.thickness > 1.65) {
+          ctx.beginPath();
+          ctx.arc(
+            drop.x - drop.drift,
+            drop.y + drop.length * 0.72,
+            0.8,
+            0,
+            Math.PI * 2
+          );
+          ctx.fillStyle = `rgba(${rainColor}, ${drop.opacity * 0.6})`;
+          ctx.fill();
+        }
+
+        drop.y += drop.speed;
+        drop.x -= drop.drift;
+
+        if (drop.y > height + drop.length) {
+          drop.y = -drop.length;
+          drop.x = Math.random() * width;
+        }
+
+        if (drop.x < -5) {
+          drop.x = width + 5;
+        }
+      }
+
+      requestAnimationFrame(drawRain);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    resizeCanvas();
+    drawRain();
+  </script>
+</body>
+</html>
+Lyric = index;
       lyricElement.classList.remove("visible");
 
       if (index === -1) {
