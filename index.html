@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#49336F">
-  <title>Di Na Muli</title>
+  <title>Di Na Muli | V2</title>
 
   <style>
     :root {
@@ -18,7 +18,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -36,8 +37,9 @@
       overflow: hidden;
       background: var(--purple);
       color: var(--cream);
-      transition: background-color 0.9s ease,
-                  color 0.9s ease;
+      transition:
+        background-color 0.9s ease,
+        color 0.9s ease;
     }
 
     #experience.cream {
@@ -87,24 +89,32 @@
       width: 29px;
       height: 29px;
       fill: currentColor;
-      filter: drop-shadow(0 0 12px rgba(232, 217, 197, 0.35));
+      filter: drop-shadow(
+        0 0 12px rgba(232, 217, 197, 0.35)
+      );
     }
 
     @keyframes starPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.12); }
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.12);
+      }
     }
 
-    /* STAR ZOOM */
+    /* EXTREME STAR ZOOM */
 
     #starExpansion {
       position: absolute;
-      z-index: 4;
-      top: 50%;
+      z-index: 10;
       left: 50%;
+      top: 50%;
       width: 30px;
       height: 30px;
       background: var(--cream);
+
       clip-path: polygon(
         50% 0%,
         61% 35%,
@@ -117,27 +127,31 @@
         2% 35%,
         39% 35%
       );
+
       transform: translate(-50%, -50%) scale(0);
       opacity: 0;
       pointer-events: none;
+      will-change: transform;
     }
 
     #experience.opening #starExpansion {
-      animation: starZoom 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+      opacity: 1;
+      animation: starZoom 1.3s cubic-bezier(
+        0.2, 0.7, 0.2, 1
+      ) forwards;
     }
 
     @keyframes starZoom {
       0% {
-        opacity: 1;
         transform: translate(-50%, -50%) scale(0);
       }
+
       100% {
-        opacity: 1;
         transform: translate(-50%, -50%) scale(150);
       }
     }
 
-    /* RAIN */
+    /* RAIN ON GLASS */
 
     #rain {
       position: absolute;
@@ -169,15 +183,22 @@
         transform: translateY(-10vh);
         opacity: 0;
       }
-      15% { opacity: 0.22; }
-      85% { opacity: 0.15; }
+
+      15% {
+        opacity: 0.22;
+      }
+
+      85% {
+        opacity: 0.15;
+      }
+
       100% {
         transform: translateY(115vh);
         opacity: 0;
       }
     }
 
-    /* LYRICS */
+    /* CENTERED LYRICS */
 
     #lyricsArea {
       position: absolute;
@@ -197,9 +218,14 @@
       line-height: 1.45;
       font-weight: 400;
       letter-spacing: 0.01em;
+
+      /* Preserve intentional line breaks */
+      white-space: pre-line;
+      text-wrap: balance;
+
+      /* Fade only: no movement and no blur */
       opacity: 0;
       transition: opacity 0.5s ease;
-      text-wrap: balance;
     }
 
     #lyric.visible {
@@ -228,7 +254,7 @@
       opacity: 0.45;
     }
 
-    /* REPLAY */
+    /* REPLAY BUTTON */
 
     #replayButton {
       position: absolute;
@@ -259,6 +285,10 @@
       #lyric {
         font-size: clamp(25px, 7vw, 35px);
       }
+
+      #lyricsArea {
+        padding: 24px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -279,7 +309,17 @@
     <section id="intro">
       <button id="starButton" aria-label="Mulai lagu">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 1.5 14.9 9.1 22.5 12l-7.6 2.9L12 22.5l-2.9-7.6L1.5 12l7.6-2.9L12 1.5Z"/>
+          <path d="
+            M12 1.5
+            14.9 9.1
+            22.5 12
+            14.9 14.9
+            12 22.5
+            9.1 14.9
+            1.5 12
+            9.1 9.1
+            Z
+          "/>
         </svg>
       </button>
     </section>
@@ -293,7 +333,9 @@
 
     <div id="footer">Di Na Muli · A little memory</div>
 
-    <button id="replayButton">ULANGI DARI AWAL ↻</button>
+    <button id="replayButton">
+      ULANGI DARI AWAL ↻
+    </button>
 
     <audio id="song" preload="auto">
       <source src="song.mp3" type="audio/mpeg">
@@ -316,35 +358,72 @@
     let openingTimer = null;
 
     /*
-      V1 TIMING
+      DI NA MULI - V2
 
-      Angka time adalah detik sejak awal file song.mp3.
-      Perkiraan ini mengasumsikan audio dipotong mulai 02:04.
+      Timestamp di bawah menggunakan detik dari awal song.mp3.
+      Asumsi audio sudah dipotong mulai sekitar 02:04.
 
-      Lirik tetap dipisah seperti konsep awal.
-      Sesuaikan timestamp setelah mengecek audio.
+      Timestamp masih perkiraan dan bisa disesuaikan.
+      Delapan bagian lirik tetap dipisah.
     */
 
     const lyrics = [
-      { time: 7.00,  text: "at natapos",             theme: "cream" },
-      { time: 9.50,  text: "aing himas ng sandali",  theme: "cream" },
-      { time: 13.35, text: "di kubuli",              theme: "purple" },
-      { time: 15.50, text: "ating tining",           theme: "purple" },
-      { time: 19.03, text: "nang lumipas na't",      theme: "cream" },
-      { time: 21.00, text: "di man lang nasabi",     theme: "cream" },
-      { time: 25.80, text: "salamat.",               theme: "purple" },
-      { time: 27.50, text: "hanggang sa muli",       theme: "purple" }
+      {
+        time: 7.00,
+        text: "at natapos",
+        theme: "cream"
+      },
+      {
+        time: 9.50,
+        text: "aing himas\nng sandali",
+        theme: "cream"
+      },
+      {
+        time: 13.35,
+        text: "di kubuli",
+        theme: "purple"
+      },
+      {
+        time: 15.50,
+        text: "ating tining",
+        theme: "purple"
+      },
+      {
+        time: 19.03,
+        text: "nang\nlumipas na't",
+        theme: "cream"
+      },
+      {
+        time: 21.00,
+        text: "di man\nlang nasabi",
+        theme: "cream"
+      },
+      {
+        time: 25.80,
+        text: "salamat.",
+        theme: "purple"
+      },
+      {
+        time: 27.50,
+        text: "hanggang\nsa muli",
+        theme: "purple"
+      }
     ];
 
-    // Hujan halus di belakang lirik.
+    // Create subtle rain droplets.
     function createRain() {
       for (let i = 0; i < 32; i++) {
         const drop = document.createElement("span");
+
         drop.className = "drop";
         drop.style.left = Math.random() * 100 + "%";
-        drop.style.height = (20 + Math.random() * 30) + "px";
-        drop.style.animationDuration = (4 + Math.random() * 5) + "s";
-        drop.style.animationDelay = (-Math.random() * 8) + "s";
+        drop.style.height =
+          (20 + Math.random() * 30) + "px";
+        drop.style.animationDuration =
+          (4 + Math.random() * 5) + "s";
+        drop.style.animationDelay =
+          (-Math.random() * 8) + "s";
+
         rain.appendChild(drop);
       }
     }
@@ -357,6 +436,8 @@
       currentLyric = index;
 
       clearTimeout(lyricChangeTimer);
+
+      // Fade out the previous line.
       lyricElement.classList.remove("visible");
 
       if (index < 0 || index >= lyrics.length) {
@@ -366,10 +447,11 @@
 
       const item = lyrics[index];
 
+      // Change the background and text color.
       experience.classList.remove("cream", "purple");
       experience.classList.add(item.theme);
 
-      // Teks tetap di tengah, hanya fade-in.
+      // Fade in at the center without moving or blurring.
       lyricChangeTimer = setTimeout(() => {
         lyricElement.textContent = item.text;
 
@@ -399,30 +481,35 @@
     async function startExperience() {
       if (started) return;
 
-      // Mulai audio saat bintang ditekan.
       try {
         await song.play();
       } catch (error) {
-        alert("Audio gagal diputar. Pastikan song.mp3 ada di folder yang sama dengan index.html.");
+        alert(
+          "Audio gagal diputar. Pastikan song.mp3 ada di folder yang sama dengan index.html."
+        );
         return;
       }
 
       started = true;
+
+      // Expand the star across the screen.
       experience.classList.add("opening", "playing");
+      intro.classList.add("hidden");
 
       openingTimer = setTimeout(() => {
-        intro.classList.add("hidden");
         experience.classList.remove("opening");
-      }, 1050);
+      }, 1400);
 
       syncLyrics();
     }
 
     starButton.addEventListener("click", startExperience);
+
     song.addEventListener("timeupdate", syncLyrics);
 
     song.addEventListener("ended", () => {
       clearTimeout(lyricChangeTimer);
+
       lyricElement.classList.remove("visible");
       experience.classList.remove("playing");
       replayButton.classList.add("show");
@@ -432,6 +519,29 @@
       clearTimeout(openingTimer);
       clearTimeout(lyricChangeTimer);
 
+      song.pause();
+      song.currentTime = 0;
+
+      started = false;
+      currentLyric = -1;
+
+      lyricElement.classList.remove("visible");
+      lyricElement.textContent = "";
+
+      experience.classList.remove(
+        "opening",
+        "playing",
+        "cream"
+      );
+
+      experience.classList.add("purple");
+
+      intro.classList.remove("hidden");
+      replayButton.classList.remove("show");
+    });
+  </script>
+</body>
+</html>
       song.pause();
       song.currentTime = 0;
 
