@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Di Na Muli | Lyric Experience</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#49336F">
+  <title>Di Na Muli</title>
 
   <style>
     :root {
@@ -18,114 +18,27 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       width: 100%;
       height: 100%;
       overflow: hidden;
+    }
+
+    body {
       font-family: Georgia, "Times New Roman", serif;
       background: var(--purple);
     }
 
     #experience {
       position: relative;
-      width: 100vw;
+      width: 100%;
       height: 100dvh;
       overflow: hidden;
       background: var(--purple);
       color: var(--cream);
-      transition: background-color 0.8s ease,
-                  color 0.8s ease;
+      transition: background-color 0.9s ease,
+                  color 0.9s ease;
     }
-
-    /* INTRO */
-
-    #intro {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      background: var(--purple);
-      transition: opacity 0.8s ease;
-    }
-
-    #starButton {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 64px;
-      height: 64px;
-      border: none;
-      background: transparent;
-      color: #E8D9C5;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      animation: starPulse 2.5s ease-in-out infinite;
-    }
-
-    #starButton svg {
-      width: 26px;
-      height: 26px;
-      fill: currentColor;
-      filter: drop-shadow(0 0 9px rgba(232, 217, 197, 0.35));
-    }
-
-    #starButton:focus-visible {
-      outline: 1px solid var(--cream);
-      outline-offset: 8px;
-      border-radius: 50%;
-    }
-
-    @keyframes starPulse {
-      0%, 100% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.12); opacity: 1; }
-    }
-
-    /* STAR EXPANSION */
-
-    #starExpansion {
-      position: absolute;
-      z-index: 4;
-      left: 50%;
-      top: 50%;
-      width: 24px;
-      height: 24px;
-      background: var(--cream);
-      clip-path: polygon(
-        50% 0%, 61% 35%, 98% 35%,
-        68% 57%, 79% 94%, 50% 71%,
-        21% 94%, 32% 57%, 2% 35%,
-        39% 35%
-      );
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #experience.opening #starExpansion {
-      animation: expandStar 1s ease-in-out forwards;
-    }
-
-    @keyframes expandStar {
-      0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      100% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(150);
-      }
-    }
-
-    #intro.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* BACKGROUND COLORS */
 
     #experience.cream {
       background: var(--cream);
@@ -137,27 +50,114 @@
       color: var(--cream);
     }
 
-    /* RAIN ON GLASS */
+    /* INTRO */
+
+    #intro {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--purple);
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    #intro.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #starButton {
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--cream);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      animation: starPulse 2.5s ease-in-out infinite;
+    }
+
+    #starButton svg {
+      width: 29px;
+      height: 29px;
+      fill: currentColor;
+      filter: drop-shadow(0 0 12px rgba(232, 217, 197, 0.35));
+    }
+
+    @keyframes starPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    /* STAR ZOOM */
+
+    #starExpansion {
+      position: absolute;
+      z-index: 4;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      background: var(--cream);
+      clip-path: polygon(
+        50% 0%,
+        61% 35%,
+        98% 35%,
+        68% 57%,
+        79% 94%,
+        50% 72%,
+        21% 94%,
+        32% 57%,
+        2% 35%,
+        39% 35%
+      );
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #experience.opening #starExpansion {
+      animation: starZoom 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    }
+
+    @keyframes starZoom {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(150);
+      }
+    }
+
+    /* RAIN */
 
     #rain {
       position: absolute;
       inset: 0;
       z-index: 1;
-      pointer-events: none;
       overflow: hidden;
+      pointer-events: none;
       opacity: 0;
       transition: opacity 1.2s ease;
     }
 
     #experience.playing #rain {
-      opacity: 0.4;
+      opacity: 0.5;
     }
 
     .drop {
       position: absolute;
-      top: -80px;
+      top: -70px;
       width: 1px;
-      height: 45px;
+      height: 35px;
       border-radius: 50%;
       background: currentColor;
       opacity: 0.22;
@@ -169,12 +169,8 @@
         transform: translateY(-10vh);
         opacity: 0;
       }
-      15% {
-        opacity: 0.25;
-      }
-      85% {
-        opacity: 0.18;
-      }
+      15% { opacity: 0.22; }
+      85% { opacity: 0.15; }
       100% {
         transform: translateY(115vh);
         opacity: 0;
@@ -185,22 +181,22 @@
 
     #lyricsArea {
       position: absolute;
-      inset: 0;
       z-index: 2;
+      inset: 0;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 32px;
+      justify-content: center;
+      padding: 28px;
       text-align: center;
       pointer-events: none;
     }
 
     #lyric {
       max-width: 850px;
-      font-size: clamp(27px, 6vw, 49px);
+      font-size: clamp(27px, 6vw, 45px);
+      line-height: 1.45;
       font-weight: 400;
-      line-height: 1.4;
-      letter-spacing: 0.015em;
+      letter-spacing: 0.01em;
       opacity: 0;
       transition: opacity 0.5s ease;
       text-wrap: balance;
@@ -210,14 +206,14 @@
       opacity: 1;
     }
 
-    /* SMALL FOOTER */
+    /* FOOTER */
 
     #footer {
       position: absolute;
       z-index: 3;
-      bottom: 26px;
       left: 0;
       right: 0;
+      bottom: 25px;
       text-align: center;
       font-family: Arial, sans-serif;
       font-size: 9px;
@@ -229,7 +225,7 @@
     }
 
     #experience.playing #footer {
-      opacity: 0.48;
+      opacity: 0.45;
     }
 
     /* REPLAY */
@@ -237,16 +233,17 @@
     #replayButton {
       position: absolute;
       z-index: 6;
-      bottom: 55px;
       left: 50%;
+      bottom: 55px;
       transform: translateX(-50%);
-      padding: 10px 16px;
+      padding: 11px 17px;
       border: 1px solid currentColor;
       border-radius: 30px;
-      color: inherit;
       background: transparent;
-      font-size: 11px;
-      letter-spacing: 1px;
+      color: inherit;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
@@ -254,30 +251,23 @@
     }
 
     #replayButton.show {
-      opacity: 0.75;
+      opacity: 0.8;
       pointer-events: auto;
     }
 
     @media (max-width: 480px) {
       #lyric {
-        font-size: clamp(25px, 7vw, 36px);
-      }
-
-      #lyricsArea {
-        padding: 24px;
+        font-size: clamp(25px, 7vw, 35px);
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .drop,
       #starButton {
         animation: none;
       }
 
-      #experience,
-      #lyric,
-      #intro {
-        transition-duration: 0.01ms;
+      .drop {
+        animation-duration: 10s;
       }
     }
   </style>
@@ -286,8 +276,8 @@
 <body>
   <main id="experience" class="purple">
 
-    <section id="intro" aria-label="Mulai pengalaman lirik">
-      <button id="starButton" aria-label="Putar lagu">
+    <section id="intro">
+      <button id="starButton" aria-label="Mulai lagu">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12 1.5 14.9 9.1 22.5 12l-7.6 2.9L12 22.5l-2.9-7.6L1.5 12l7.6-2.9L12 1.5Z"/>
         </svg>
@@ -295,7 +285,6 @@
     </section>
 
     <div id="starExpansion"></div>
-
     <div id="rain" aria-hidden="true"></div>
 
     <section id="lyricsArea" aria-live="off">
@@ -323,39 +312,39 @@
 
     let started = false;
     let currentLyric = -1;
-    let openingTimer;
+    let lyricChangeTimer = null;
+    let openingTimer = null;
 
     /*
-      V1: WAKTU LIRIK MASIH PERKIRAAN.
+      V1 TIMING
 
-      "time" menggunakan detik dari awal file song.mp3.
-      Ubah angka time setelah mencocokkan dengan audio kamu.
-      Gunakan time: 0 untuk lirik yang muncul sejak awal.
+      Angka time adalah detik sejak awal file song.mp3.
+      Perkiraan ini mengasumsikan audio dipotong mulai 02:04.
+
+      Lirik tetap dipisah seperti konsep awal.
+      Sesuaikan timestamp setelah mengecek audio.
     */
 
     const lyrics = [
-      { time: 8,  text: "at natapos",                  theme: "cream" },
-      { time: 12, text: "aing himas ng sandali",       theme: "purple" },
-      { time: 16, text: "di kubuli",                   theme: "cream" },
-      { time: 20, text: "ating tining",                theme: "purple" },
-      { time: 24, text: "nang lumipas na't",            theme: "cream" },
-      { time: 28, text: "di man lang nasabi",           theme: "purple" },
-      { time: 32, text: "salamat.",                     theme: "cream" },
-      { time: 36, text: "hanggang sa muli",             theme: "purple" }
+      { time: 7.00,  text: "at natapos",             theme: "cream" },
+      { time: 9.50,  text: "aing himas ng sandali",  theme: "cream" },
+      { time: 13.35, text: "di kubuli",              theme: "purple" },
+      { time: 15.50, text: "ating tining",           theme: "purple" },
+      { time: 19.03, text: "nang lumipas na't",      theme: "cream" },
+      { time: 21.00, text: "di man lang nasabi",     theme: "cream" },
+      { time: 25.80, text: "salamat.",               theme: "purple" },
+      { time: 27.50, text: "hanggang sa muli",       theme: "purple" }
     ];
 
-    // Membuat tetesan hujan yang halus.
+    // Hujan halus di belakang lirik.
     function createRain() {
-      const dropCount = 32;
-
-      for (let i = 0; i < dropCount; i++) {
+      for (let i = 0; i < 32; i++) {
         const drop = document.createElement("span");
         drop.className = "drop";
         drop.style.left = Math.random() * 100 + "%";
-        drop.style.animationDuration = (3.5 + Math.random() * 5) + "s";
+        drop.style.height = (20 + Math.random() * 30) + "px";
+        drop.style.animationDuration = (4 + Math.random() * 5) + "s";
         drop.style.animationDelay = (-Math.random() * 8) + "s";
-        drop.style.height = (20 + Math.random() * 35) + "px";
-
         rain.appendChild(drop);
       }
     }
@@ -367,7 +356,7 @@
 
       currentLyric = index;
 
-      // Hilangkan teks sebelumnya dengan fade-out.
+      clearTimeout(lyricChangeTimer);
       lyricElement.classList.remove("visible");
 
       if (index < 0 || index >= lyrics.length) {
@@ -377,19 +366,19 @@
 
       const item = lyrics[index];
 
-      // Ganti tema warna background dan teks.
       experience.classList.remove("cream", "purple");
       experience.classList.add(item.theme);
 
       // Teks tetap di tengah, hanya fade-in.
-      setTimeout(() => {
+      lyricChangeTimer = setTimeout(() => {
         lyricElement.textContent = item.text;
+
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             lyricElement.classList.add("visible");
           });
         });
-      }, 350);
+      }, 500);
     }
 
     function syncLyrics() {
@@ -409,33 +398,59 @@
 
     async function startExperience() {
       if (started) return;
-      started = true;
 
-      experience.classList.add("opening");
-
-      // Putar audio setelah pengguna mengetuk bintang.
+      // Mulai audio saat bintang ditekan.
       try {
         await song.play();
       } catch (error) {
-        started = false;
-        experience.classList.remove("opening");
-        alert("Audio belum bisa diputar. Pastikan file song.mp3 sudah ada.");
+        alert("Audio gagal diputar. Pastikan song.mp3 ada di folder yang sama dengan index.html.");
         return;
       }
 
-      experience.classList.add("playing");
+      started = true;
+      experience.classList.add("opening", "playing");
 
       openingTimer = setTimeout(() => {
-        intro.classList.add("hide");
+        intro.classList.add("hidden");
         experience.classList.remove("opening");
-      }, 850);
+      }, 1050);
 
       syncLyrics();
     }
 
     starButton.addEventListener("click", startExperience);
-
     song.addEventListener("timeupdate", syncLyrics);
+
+    song.addEventListener("ended", () => {
+      clearTimeout(lyricChangeTimer);
+      lyricElement.classList.remove("visible");
+      experience.classList.remove("playing");
+      replayButton.classList.add("show");
+    });
+
+    replayButton.addEventListener("click", () => {
+      clearTimeout(openingTimer);
+      clearTimeout(lyricChangeTimer);
+
+      song.pause();
+      song.currentTime = 0;
+
+      started = false;
+      currentLyric = -1;
+
+      lyricElement.classList.remove("visible");
+      lyricElement.textContent = "";
+
+      experience.classList.remove("opening", "playing", "cream");
+      experience.classList.add("purple");
+
+      intro.classList.remove("hidden");
+      replayButton.classList.remove("show");
+    });
+  </script>
+</body>
+</html>
+ddEventListener("timeupdate", syncLyrics);
 
     song.addEventListener("ended", () => {
       lyricElement.classList.remove("visible");
